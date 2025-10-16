@@ -51,6 +51,7 @@ function helper {
     if [ $# -ne entry_arg ]; then
         echo " please enter required arguments"
     fi
+}
 # Main script
 
 echo "Listing users with read access to ${REPO_OWNER}/${REPO_NAME}..."
