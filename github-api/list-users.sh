@@ -1,5 +1,14 @@
 #!/bin/bash
 
+#####################
+#Author:Subha
+#Date:16/10/2025
+
+#This Script list the collaborators in your github org
+#####################
+
+helper{}
+
 # GitHub API URL
 API_URL="https://api.github.com"
 
@@ -36,6 +45,12 @@ function list_users_with_read_access {
     fi
 }
 
+# Helper Function
+function helper {
+    entry_arg =2
+    if [ $# -ne entry_arg ]; then
+        echo " please enter required arguments"
+    fi
 # Main script
 
 echo "Listing users with read access to ${REPO_OWNER}/${REPO_NAME}..."
