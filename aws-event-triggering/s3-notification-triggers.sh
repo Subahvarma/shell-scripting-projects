@@ -1,7 +1,8 @@
 #!/bin/bash
 
 set -x
-
+sudo apt update
+sudo apt install jq -y
 # Store the AWS account ID in a variable
 aws_account_id=$(aws sts get-caller-identity --query 'Account' --output text)
 
@@ -16,20 +17,16 @@ role_name="s3-lambda-sns"
 email_address="subhadravarma777@gmail.com"
 
 # Create IAM Role for the project
-role_response=$(aws iam create-role --role-name s3-lambda-sns --assume-role-policy-document '{
+role_response=$(aws iam create-role --role-name s3-lambda-sns \
+--assume-role-policy-document '{
   "Version": "2012-10-17",
   "Statement": [{
-    "Action": "sts:AssumeRole",
     "Effect": "Allow",
-    "Principal": {
-      "Service": [
-         "lambda.amazonaws.com",
-         "s3.amazonaws.com",
-         "sns.amazonaws.com"
-      ]
-    }
+    "Principal": { "Service": "lambda.amazonaws.com" },
+    "Action": "sts:AssumeRole"
   }]
-}')
+}'
+)
 
 # Extract the role ARN from the JSON response and store it in a variable
 role_arn=$(echo "$role_response" | jq -r '.Role.Arn')
@@ -38,8 +35,16 @@ role_arn=$(echo "$role_response" | jq -r '.Role.Arn')
 echo "Role ARN: $role_arn"
 
 # Attach Permissions to the Role
-aws iam attach-role-policy --role-name $role_name --policy-arn arn:aws:iam::aws:policy/AWSLambda_FullAccess
-aws iam attach-role-policy --role-name $role_name --policy-arn arn:aws:iam::aws:policy/AmazonSNSFullAccess
+aws iam attach-role-policy --role-name s3-lambda-sns \
+  --policy-arn arn:aws:iam::aws:policy/AWSLambda_FullAccess
+
+aws iam attach-role-policy --role-name s3-lambda-sns \
+  --policy-arn arn:aws:iam::aws:policy/AmazonSNSFullAccess
+
+aws iam attach-role-policy --role-name s3-lambda-sns \
+  --policy-arn arn:aws:iam::aws:policy/AmazonS3FullAccess
+
+ 
 
 # Create the S3 bucket and capture the output in a variable
 bucket_output=$(aws s3api create-bucket --bucket "$bucket_name" --region "$aws_region")
