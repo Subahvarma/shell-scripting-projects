@@ -10,9 +10,9 @@ echo "AWS Account ID: $aws_account_id"
 
 # Set AWS region and bucket name
 aws_region="us-east-1"
-bucket_name="subbbu-bucket-set"
-lambda_func_name="s3-lambda-function-subha"
-role_name="s3-lambda-sns-subha"
+bucket_name="subbbu-bucket-ext"
+lambda_func_name="s3-lambda-function"
+role_name="s3-lambda-sns"
 email_address="subhadravarma777@gmail.com"
 
 # Create IAM Role for the project
